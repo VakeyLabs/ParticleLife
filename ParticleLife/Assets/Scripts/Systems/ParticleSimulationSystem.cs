@@ -15,8 +15,7 @@ public partial class ParticleSimulationSystem: SystemBase
         var particleTransforms = particlesQuery.ToComponentDataArray<WorldTransform>(Allocator.TempJob);
 
         var ruleMatrix = spawner.particleMatrix.CreateMatrix();
-        var forceX = new NativeArray<float>(particleTransforms.Length, Allocator.TempJob);
-        var forceY = new NativeArray<float>(particleTransforms.Length, Allocator.TempJob);
+        var force = new NativeArray<float3>(particleTransforms.Length, Allocator.TempJob);
 
         for (var i = 0; i < particleTransforms.Length; i++)
         {
@@ -38,32 +37,23 @@ public partial class ParticleSimulationSystem: SystemBase
 
                 if (distance < spawner.particleProperties.minRadius)
                 {
-                    var force = spawner.particleProperties.innerDetract * 1/distance;
-                    var fx = (force * delta.x);
-                    var fy = (force * delta.y);
-                    forceX[i] += fx;
-                    forceY[i] += fy;
-                    forceX[k] -= fx;
-                    forceY[k] -= fy;
+                    var forceStrength = spawner.particleProperties.innerDetract * 1/distance * delta;
+                    force[i] += forceStrength;
+                    force[k] -= forceStrength;
                 }
                 else if (distance < spawner.particleProperties.maxRadius)
                 {
-                    var attraction = ruleMatrix[aColor][bColor];
-                    var force = attraction * 1/distance;
-                    forceX[i] += (force * delta.x);
-                    forceY[i] += (force * delta.y);
+                    var attractionA = ruleMatrix[aColor][bColor];
+                    var forceStrength = attractionA * 1/distance * delta;
+                    force[i] += forceStrength;
                     
-                    var attraction2 = ruleMatrix[bColor][aColor];
-                    force = attraction2 * 1/distance;
-                    forceX[k] -= (force * delta.x);
-                    forceY[k] -= (force * delta.y);
+                    var attractionB = ruleMatrix[bColor][aColor];
+                    forceStrength = attractionB * 1/distance * delta;
+                    force[k] -= forceStrength;
                 }
             }
 
-            var valX = (forceX[i]) * 0.4f;
-            var valY = (forceY[i]) * 0.4f;
-
-            aVel = math.lerp(aVel, new float3(valX, valY, 0), 0.5f);
+            aVel = math.lerp(aVel, force[i] * 0.4f, 0.5f);
             EntityManager.SetComponentData<Velocity>(entity, new Velocity { value = aVel });
         }
 
@@ -73,7 +63,6 @@ public partial class ParticleSimulationSystem: SystemBase
         entities.Dispose();
         particleTransforms.Dispose();
         ruleMatrix.Dispose();
-        forceX.Dispose();
-        forceY.Dispose();
+        force.Dispose();
     }
 }

@@ -34,14 +34,3 @@ public partial struct MovementJob: IJobEntity
         if (transform.LocalPosition.y >= bounds.heightRadius) { transform.TranslateWorld(new float3(0, -bounds.height, 0)); }
     }
 }
-
-
-// public partial class MovementSystem: SystemBase
-// {
-//     protected override void OnUpdate()
-//     {
-//         foreach ((TransformAspect transform, RefRO<Velocity> velocity) in SystemAPI.Query<TransformAspect, RefRO<Velocity>>()) {
-//             transform.TranslateWorld(SystemAPI.Time.DeltaTime * velocity.ValueRO.value);
-//         }
-//     }
-// }
