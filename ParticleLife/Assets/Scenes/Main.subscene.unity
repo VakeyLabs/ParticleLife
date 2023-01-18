@@ -123,3 +123,64 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1465725834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1465725836}
+  - component: {fileID: 1465725835}
+  m_Layer: 0
+  m_Name: ParticleSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1465725835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465725834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07d462ca77f6a1439b113d6df58a968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  redParticlePrefab: {fileID: 5094317409439789216, guid: 40b5d669ab6f6904b86018914a623c4e, type: 3}
+  greenParticlePrefab: {fileID: 5094317409439789216, guid: cf30cf5e851c5df44a3545313b5f56c7, type: 3}
+  simulationBounds:
+    height: 80
+    width: 200
+    heightRadius: 0
+    widthRadius: 0
+  particleProperties:
+    innerDetract: 10
+    count: 600
+    minRadius: 1.5
+    maxRadius: 20
+  particleMatrix:
+    redToRed: -0.5
+    redToGreen: 4
+    greenToRed: -2
+    greenToGreen: -0.1
+--- !u!4 &1465725836
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465725834}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
