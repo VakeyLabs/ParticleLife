@@ -8,6 +8,7 @@ public partial class ParticleSimulationMainThreadSystem: SystemBase
     protected override void OnUpdate()
     {
         var commandBuffer = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(World.Unmanaged);
+        var spawner = SystemAPI.GetSingleton<ParticleSpawner>();
         var particleRuleBuffer = SystemAPI.GetBuffer<ParticleRuleElement>(SystemAPI.GetSingletonEntity<ParticleSpawner>());
 
         var particlesQuery = EntityManager.CreateEntityQuery(typeof(ParticleTag), typeof(Velocity), typeof(WorldTransform));
