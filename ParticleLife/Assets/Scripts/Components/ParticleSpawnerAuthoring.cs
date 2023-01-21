@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Unity.Collections;
 using Unity.Entities;
 
 [Serializable]
@@ -24,31 +23,13 @@ public struct ParticleMatrix
 {
     public float redToRed, redToGreen;
     public float greenToRed, greenToGreen;
-
-    // Todo: convert to dynamic buffer
-    public NativeArray<NativeArray<float>> CreateMatrix()
-    {
-        var ruleMatrix = new NativeArray<NativeArray<float>>(2, Allocator.TempJob);
-        var red = new NativeArray<float>(2, Allocator.TempJob);
-        red[0] = redToRed;
-        red[1] = redToGreen;
-        ruleMatrix[0] = red;
-        var green = new NativeArray<float>(2, Allocator.TempJob);
-        green[0] = greenToRed;
-        green[1] = greenToGreen;
-        ruleMatrix[1] = green;
-
-        return ruleMatrix;
-    }
 }
 
 public struct ParticleSpawner: IComponentData
-{ 
-    // Todo: convert to dynamic buffer
-    public Entity redParticlePrefab, greenParticlePrefab;
+{
     public SimulationBounds simulationBounds;
     public ParticleProperties particleProperties;
-    public ParticleMatrix particleMatrix;
+    public int colorCount;
 }
 
 public class ParticleSpawnerAuthoring: MonoBehaviour
@@ -59,6 +40,9 @@ public class ParticleSpawnerAuthoring: MonoBehaviour
     public ParticleMatrix particleMatrix;
 }
 
+public struct ParticleRuleElement: IBufferElementData { public float attraction; }
+public struct ParticleEntityElement: IBufferElementData { public Entity prefab; }
+
 public class ParticleSpawnerBaker: Baker<ParticleSpawnerAuthoring>
 {
     public override void Bake(ParticleSpawnerAuthoring authoring)
@@ -66,13 +50,21 @@ public class ParticleSpawnerBaker: Baker<ParticleSpawnerAuthoring>
         var bounds = authoring.simulationBounds;
         bounds.heightRadius = bounds.height / 2;
         bounds.widthRadius = bounds.width / 2;
+        
+        var ruleBuffer = AddBuffer<ParticleRuleElement>();
+        ruleBuffer.Add(new ParticleRuleElement { attraction = authoring.particleMatrix.redToRed });
+        ruleBuffer.Add(new ParticleRuleElement { attraction = authoring.particleMatrix.redToGreen });
+        ruleBuffer.Add(new ParticleRuleElement { attraction = authoring.particleMatrix.greenToRed });
+        ruleBuffer.Add(new ParticleRuleElement { attraction = authoring.particleMatrix.greenToGreen });
+
+        var entityBuffer = AddBuffer<ParticleEntityElement>();
+        entityBuffer.Add(new ParticleEntityElement { prefab = GetEntity(authoring.redParticlePrefab) });
+        entityBuffer.Add(new ParticleEntityElement { prefab = GetEntity(authoring.greenParticlePrefab) });
 
         AddComponent(new ParticleSpawner { 
-            redParticlePrefab = GetEntity(authoring.redParticlePrefab),
-            greenParticlePrefab = GetEntity(authoring.greenParticlePrefab),
             simulationBounds = bounds,
             particleProperties = authoring.particleProperties,
-            particleMatrix = authoring.particleMatrix,
+            colorCount = (int)Math.Sqrt(ruleBuffer.Length),
         });
     }
 }
