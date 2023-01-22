@@ -1,14 +1,20 @@
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Collections;
 using Unity.Transforms;
 using Unity.Mathematics;
 
-public partial class ParticleSimulationMainThreadNaiveSystem: SystemBase
+[BurstCompile]
+public partial struct ParticleSimulationMainThreadNaiveSystem: ISystem
 {
-    protected override void OnUpdate()
+    public void OnCreate(ref SystemState state) { }
+    public void OnDestroy(ref SystemState state) { }
+
+    [BurstCompile]
+    public void OnUpdate(ref SystemState state)
     {
         var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
-        var commandBuffer = ecbSingleton.CreateCommandBuffer(World.Unmanaged);
+        var commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
         var spawner = SystemAPI.GetSingleton<ParticleSpawner>();
         var particleRuleBuffer = SystemAPI.GetBuffer<ParticleRuleElement>(SystemAPI.GetSingletonEntity<ParticleSpawner>());
         var particlesQuery = SystemAPI.QueryBuilder().WithAll<ParticleTag, Velocity, WorldTransform>().Build();

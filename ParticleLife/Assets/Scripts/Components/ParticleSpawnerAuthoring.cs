@@ -14,8 +14,8 @@ public struct SimulationBounds
 [Serializable]
 public struct ParticleProperties
 {
-    public float innerDetract;
     public int count;
+    public float innerDetract;
     public float minRadius, maxRadius;
 }
 

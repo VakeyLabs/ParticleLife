@@ -19,14 +19,11 @@ public class ParticleSystemManagement: MonoBehaviour
     {
         if (systemType == ParticleSystemType.MainThreadNaive)
         {
-            return (bool enabled) => world.GetExistingSystemManaged<ParticleSimulationMainThreadNaiveSystem>().Enabled = enabled;
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<ParticleSimulationMainThreadNaiveSystem>().Enabled = enabled;
         }
         else if (systemType == ParticleSystemType.MainThreadOptimized)
         {
-            return (bool enabled) => {
-                var blah = world.GetExistingSystemManaged<ParticleSimulationMainThreadOptimizedSystem>();
-                blah.Enabled = enabled;
-            };
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<ParticleSimulationMainThreadOptimizedSystem>().Enabled = enabled;
         }
         else if (systemType == ParticleSystemType.JobNaive)
         {
