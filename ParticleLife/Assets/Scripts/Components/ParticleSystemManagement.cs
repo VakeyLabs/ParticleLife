@@ -6,7 +6,9 @@ public enum ParticleSystemType
 {
     MainThreadNaive,
     MainThreadOptimized,
+    MainThreadSpatialPartioning,
     JobNaive,
+    JobSpatialPartioning,
 }
 
 public class ParticleSystemManagement: MonoBehaviour
@@ -29,6 +31,15 @@ public class ParticleSystemManagement: MonoBehaviour
         {
             return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<ParticleSimulationJobNaiveSystem>().Enabled = enabled;
         }
+        else if (systemType == ParticleSystemType.MainThreadSpatialPartioning)
+        {
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<SpatialPartioningMainThreadSystem>().Enabled = enabled;
+        }
+        // else if (systemType == ParticleSystemType.JobSpatialPartioning)
+        // {
+        //     // return (bool enabled) => world.GetExistingSystemManaged<SpatialPartioningMainThreadSystem>().Enabled = enabled;
+        //     return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<SpatialPartioningMainThreadSystem>().Enabled = enabled;
+        // }
 
         return (bool enabled) => { };
     }

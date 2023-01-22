@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1465725836}
   - component: {fileID: 1465725835}
+  - component: {fileID: 1465725837}
   m_Layer: 0
   m_Name: ParticleSpawner
   m_TagString: Untagged
@@ -160,10 +161,10 @@ MonoBehaviour:
     heightRadius: 0
     widthRadius: 0
   particleProperties:
-    count: 1000
+    count: 2000
     innerDetract: 10
     minRadius: 1.5
-    maxRadius: 20
+    maxRadius: 17
   particleMatrix:
     redToRed: -0.5
     redToGreen: 4
@@ -184,3 +185,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1465725837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465725834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc0f1e89efa1ad46b9452b108dcfd2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellSize: 20
+  unitYMultiplier: 1000
