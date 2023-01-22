@@ -3,15 +3,15 @@ using Unity.Collections;
 using Unity.Transforms;
 using Unity.Mathematics;
 
-public partial class ParticleSimulationMainThreadSystem: SystemBase
+public partial class ParticleSimulationMainThreadOptimizedSystem: SystemBase
 {
     protected override void OnUpdate()
     {
         var commandBuffer = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(World.Unmanaged);
         var spawner = SystemAPI.GetSingleton<ParticleSpawner>();
         var particleRuleBuffer = SystemAPI.GetBuffer<ParticleRuleElement>(SystemAPI.GetSingletonEntity<ParticleSpawner>());
+        var particlesQuery = SystemAPI.QueryBuilder().WithAll<ParticleTag, Velocity, WorldTransform>().Build();
 
-        var particlesQuery = EntityManager.CreateEntityQuery(typeof(ParticleTag), typeof(Velocity), typeof(WorldTransform));
         var particleTags = particlesQuery.ToComponentDataArray<ParticleTag>(Allocator.TempJob);
         var velocities = particlesQuery.ToComponentDataArray<Velocity>(Allocator.TempJob);
         var entities = particlesQuery.ToEntityArray(Allocator.TempJob);
@@ -21,37 +21,32 @@ public partial class ParticleSimulationMainThreadSystem: SystemBase
 
         for (var i = 0; i < transforms.Length; i++)
         {
+            var aColor = (int)particleTags[i].color;
             var aPos = transforms[i].Position;
             var aVel = velocities[i].value;
-            var aColor = (int)particleTags[i].color;
             var entity = entities[i];
 
             for (var k = i+1; k < transforms.Length; k++)
             {
                 var bColor = (int)particleTags[k].color;
                 var bPos = transforms[k].Position;
-                var delta = aPos - bPos;
-                var edgeDeltaX = delta.x > 0 ? delta.x - spawner.simulationBounds.width : delta.x + spawner.simulationBounds.width;
-                var edgeDeltaY = delta.y > 0 ? delta.y - spawner.simulationBounds.height : delta.y + spawner.simulationBounds.height;
-                delta.x = math.abs(edgeDeltaX) < math.abs(delta.x) ? edgeDeltaX : delta.x;
-                delta.y = math.abs(edgeDeltaY) < math.abs(delta.y) ? edgeDeltaY : delta.y;
+                var delta = spawner.GetDelta(aPos, bPos);
                 var distance = math.sqrt(delta.x * delta.x + delta.y * delta.y);
                 
                 if (distance < spawner.particleProperties.minRadius)
                 {
-                    var forceStrength = spawner.particleProperties.innerDetract * 1/distance * delta;
+                    var attraction = spawner.particleProperties.innerDetract;
+                    var forceStrength = spawner.GetForce(attraction, distance, delta);
                     force[i] += forceStrength;
                     force[k] -= forceStrength;
                 }
                 else if (distance < spawner.particleProperties.maxRadius)
                 {
                     var attractionA = particleRuleBuffer[aColor * 2 + bColor].attraction;
-                    var forceStrength = attractionA * 1/distance * delta;
-                    force[i] += forceStrength;
+                    force[i] += spawner.GetForce(attractionA, distance, delta);
                     
                     var attractionB = particleRuleBuffer[bColor * 2 + aColor].attraction;
-                    forceStrength = attractionB * 1/distance * delta;
-                    force[k] -= forceStrength;
+                    force[k] -= spawner.GetForce(attractionB, distance, delta);
                 }
             }
 
@@ -59,7 +54,6 @@ public partial class ParticleSimulationMainThreadSystem: SystemBase
             commandBuffer.SetComponent<Velocity>(entity, new Velocity { value = aVel });
         }
 
-        particlesQuery.Dispose();
         particleTags.Dispose();
         velocities.Dispose();
         entities.Dispose();

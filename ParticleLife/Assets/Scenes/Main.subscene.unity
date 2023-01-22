@@ -161,7 +161,7 @@ MonoBehaviour:
     widthRadius: 0
   particleProperties:
     innerDetract: 10
-    count: 600
+    count: 200
     minRadius: 1.5
     maxRadius: 20
   particleMatrix:

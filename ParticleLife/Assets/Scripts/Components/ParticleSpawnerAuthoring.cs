@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Unity.Entities;
+using Unity.Mathematics;
 
 [Serializable]
 public struct SimulationBounds
@@ -25,11 +26,30 @@ public struct ParticleMatrix
     public float greenToRed, greenToGreen;
 }
 
+public struct ParticleRuleElement: IBufferElementData { public float attraction; }
+public struct ParticleEntityElement: IBufferElementData { public Entity prefab; }
+
 public struct ParticleSpawner: IComponentData
 {
     public SimulationBounds simulationBounds;
     public ParticleProperties particleProperties;
     public int colorCount;
+
+    public float3 GetDelta(float3 aPos, float3 bPos)
+    {
+        var delta = aPos - bPos;
+        var edgeDeltaX = delta.x > 0 ? delta.x - simulationBounds.width : delta.x + simulationBounds.width;
+        var edgeDeltaY = delta.y > 0 ? delta.y - simulationBounds.height : delta.y + simulationBounds.height;
+        delta.x = math.abs(edgeDeltaX) < math.abs(delta.x) ? edgeDeltaX : delta.x;
+        delta.y = math.abs(edgeDeltaY) < math.abs(delta.y) ? edgeDeltaY : delta.y;
+
+        return delta;
+    }
+
+    public float3 GetForce(float attraction, float distance, float3 delta)
+    {
+        return attraction * 1/distance * delta;
+    }
 }
 
 public class ParticleSpawnerAuthoring: MonoBehaviour
@@ -40,9 +60,6 @@ public class ParticleSpawnerAuthoring: MonoBehaviour
     public ParticleMatrix particleMatrix;
 }
 
-public struct ParticleRuleElement: IBufferElementData { public float attraction; }
-public struct ParticleEntityElement: IBufferElementData { public Entity prefab; }
-
 public class ParticleSpawnerBaker: Baker<ParticleSpawnerAuthoring>
 {
     public override void Bake(ParticleSpawnerAuthoring authoring)
@@ -50,7 +67,7 @@ public class ParticleSpawnerBaker: Baker<ParticleSpawnerAuthoring>
         var bounds = authoring.simulationBounds;
         bounds.heightRadius = bounds.height / 2;
         bounds.widthRadius = bounds.width / 2;
-        
+
         var ruleBuffer = AddBuffer<ParticleRuleElement>();
         ruleBuffer.Add(new ParticleRuleElement { attraction = authoring.particleMatrix.redToRed });
         ruleBuffer.Add(new ParticleRuleElement { attraction = authoring.particleMatrix.redToGreen });
@@ -61,7 +78,7 @@ public class ParticleSpawnerBaker: Baker<ParticleSpawnerAuthoring>
         entityBuffer.Add(new ParticleEntityElement { prefab = GetEntity(authoring.redParticlePrefab) });
         entityBuffer.Add(new ParticleEntityElement { prefab = GetEntity(authoring.greenParticlePrefab) });
 
-        AddComponent(new ParticleSpawner { 
+        AddComponent(new ParticleSpawner {
             simulationBounds = bounds,
             particleProperties = authoring.particleProperties,
             colorCount = (int)Math.Sqrt(ruleBuffer.Length),
