@@ -6,6 +6,7 @@ public enum ParticleSystemType
 {
     MainThreadNaive,
     MainThreadOptimized,
+    JobNaive,
 }
 
 public class ParticleSystemManagement: MonoBehaviour
@@ -27,10 +28,10 @@ public class ParticleSystemManagement: MonoBehaviour
                 blah.Enabled = enabled;
             };
         }
-        // else if (systemType == ParticleSystemType.UnmanagedSystem)
-        // {
-        //     return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<MyUnmanagedSys>().Enabled = enabled;
-        // }
+        else if (systemType == ParticleSystemType.JobNaive)
+        {
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<ParticleSimulationJobNaiveSystem>().Enabled = enabled;
+        }
 
         return (bool enabled) => { };
     }

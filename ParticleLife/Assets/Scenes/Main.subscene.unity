@@ -156,12 +156,12 @@ MonoBehaviour:
   greenParticlePrefab: {fileID: 5094317409439789216, guid: cf30cf5e851c5df44a3545313b5f56c7, type: 3}
   simulationBounds:
     height: 80
-    width: 200
+    width: 600
     heightRadius: 0
     widthRadius: 0
   particleProperties:
     innerDetract: 10
-    count: 200
+    count: 600
     minRadius: 1.5
     maxRadius: 20
   particleMatrix:

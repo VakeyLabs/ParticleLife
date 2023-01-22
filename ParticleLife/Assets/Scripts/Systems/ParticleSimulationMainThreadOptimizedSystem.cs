@@ -7,7 +7,8 @@ public partial class ParticleSimulationMainThreadOptimizedSystem: SystemBase
 {
     protected override void OnUpdate()
     {
-        var commandBuffer = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(World.Unmanaged);
+        var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+        var commandBuffer = ecbSingleton.CreateCommandBuffer(World.Unmanaged);
         var spawner = SystemAPI.GetSingleton<ParticleSpawner>();
         var particleRuleBuffer = SystemAPI.GetBuffer<ParticleRuleElement>(SystemAPI.GetSingletonEntity<ParticleSpawner>());
         var particlesQuery = SystemAPI.QueryBuilder().WithAll<ParticleTag, Velocity, WorldTransform>().Build();
