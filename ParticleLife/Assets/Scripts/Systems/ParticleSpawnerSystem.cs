@@ -11,13 +11,17 @@ public partial class ParticleSpawnerSystem: SystemBase
         var spawner = SystemAPI.GetSingleton<ParticleSpawner>();
         var entityCount = particleQuery.CalculateEntityCount();
         
-        if (entityCount < spawner.particleProperties.count) {
+        var count = 0;
+        while (entityCount < spawner.particleProperties.count && count < 10) {
             var commandBuffer = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(World.Unmanaged);
             var particleEntityBuffer = SystemAPI.GetBuffer<ParticleEntityElement>(SystemAPI.GetSingletonEntity<ParticleSpawner>());
             var particleEntity = commandBuffer.Instantiate(particleEntityBuffer[entityCount % 2].prefab);
             var position = new float3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(-40, 40), 0);
 
             commandBuffer.SetComponent<LocalTransform>(particleEntity, new LocalTransform { Position = position, Rotation = quaternion.identity, Scale = UnityEngine.Random.Range(1, 3)});
+            entityCount++;
+            count++;
+
         }
     }
 }

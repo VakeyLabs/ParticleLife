@@ -161,10 +161,10 @@ MonoBehaviour:
     heightRadius: 0
     widthRadius: 0
   particleProperties:
-    count: 2000
-    innerDetract: 10
+    count: 10000
+    innerDetract: 20
     minRadius: 1.5
-    maxRadius: 17
+    maxRadius: 20
   particleMatrix:
     redToRed: -0.5
     redToGreen: 4
