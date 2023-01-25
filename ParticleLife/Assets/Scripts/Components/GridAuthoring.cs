@@ -39,36 +39,46 @@ public struct Grid: IComponentData
         return count;
     }
 
-    public NativeArray<int> GetSurroundingCells(int key, int horizontalCount, int verticalCount)
+    public NativeArray<int> GetSurroundingCells(int key, float maxRadius)
     {
-        var keys = new NativeArray<int>(9, Allocator.Temp);
-        GetSurroundingCells(ref keys, key, horizontalCount, verticalCount);
+        var keys = new NativeArray<int>(GetSorroundingCellsCount(maxRadius), Allocator.Temp);
+        GetSurroundingCells(ref keys, key);
         return keys;
     }
 
-    public void GetSurroundingCells(ref NativeArray<int> keys, int key, int horizontalCount, int verticalCount)
+    public int GetSorroundingCellsCount(float maxRadius)
+    {
+        var cellsLength = (int)math.ceil(maxRadius / cellSize) * 2 + 1;
+        return cellsLength * cellsLength;
+    }
+
+    public void GetSurroundingCells(ref NativeArray<int> keys, int key)
     {
         var cellPos = GetCellPosition(key);
-        var leftX = -1;
-        var rightX = 1;
-        var topY = unitYMultiplier;
-        var bottomY = -unitYMultiplier;
+        // var leftX = -1;
+        // var rightX = 1;
+        // var topY = unitYMultiplier;
+        // var bottomY = -unitYMultiplier;
 
-        if (cellPos.x == horizontalCount - 1) rightX += -horizontalCount * 2;
-        else if (cellPos.x == -horizontalCount) leftX += horizontalCount * 2;
+        // if (cellPos.x == horizontalCount - 1) rightX += -horizontalCount * 2;
+        // else if (cellPos.x == -horizontalCount) leftX += horizontalCount * 2;
 
-        if (cellPos.y == verticalCount - 1) topY += -verticalCount * 2 * unitYMultiplier;
-        else if (cellPos.y == -verticalCount) bottomY += verticalCount * 2 * unitYMultiplier;
+        // if (cellPos.y == verticalCount - 1) topY += -verticalCount * 2 * unitYMultiplier;
+        // else if (cellPos.y == -verticalCount) bottomY += verticalCount * 2 * unitYMultiplier;
+        
+        var index = 0;
+        var count = ((int)math.sqrt(keys.Length) - 1) / 2;
 
-        keys[0] = key + leftX + topY;
-        keys[1] = key + topY;
-        keys[2] = key + rightX + topY;
-        keys[3] = key + leftX;
-        keys[4] = key;
-        keys[5] = key + rightX;
-        keys[6] = key + leftX + bottomY;
-        keys[7] = key + bottomY;
-        keys[8] = key + rightX + bottomY;
+        var yStart = unitYMultiplier * count;
+        var xStart = -count;
+
+        for (var y = yStart; y >= -yStart; y -= unitYMultiplier)
+        {
+            for (var x = xStart; x <= -xStart; x++)
+            {
+                keys[index++] = key + x + y;
+            }
+        }
     }
 }
 

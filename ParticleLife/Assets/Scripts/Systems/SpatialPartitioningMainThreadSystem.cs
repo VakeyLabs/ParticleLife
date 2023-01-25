@@ -30,13 +30,8 @@ public partial struct SpatialPartitioningMainThreadSystem: ISystem
             grid = grid,
             gridHashMap = gridHashMap.AsParallelWriter()
         }.ScheduleParallel(state.Dependency).Complete();
-        
-        var horizontalCount = (int) spawner.simulationBounds.widthRadius / grid.cellSize;
-        var verticalCount = (int) spawner.simulationBounds.heightRadius / grid.cellSize;
 
         new SpatialPartitioningJob{
-            horizontalCount = horizontalCount,
-            verticalCount = verticalCount,
             grid = grid,
             spawner = spawner,
             particleRuleBuffer = particleRuleBuffer,

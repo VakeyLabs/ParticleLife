@@ -58,9 +58,9 @@ public partial class SpatialPartioningDebug: MonoBehaviour
         // DebugDrawCells(mousePos, grid);
         // DebugDrawCells(key, grid);
 
-        var horizontalCount = (int) math.ceil(spawner.simulationBounds.widthRadius / grid.cellSize);
-        var verticalCount = (int) math.ceil(spawner.simulationBounds.heightRadius / grid.cellSize);
-        var keys = grid.GetSurroundingCells(key, horizontalCount, verticalCount);
+        // var horizontalCount = (int) math.ceil(spawner.simulationBounds.widthRadius / grid.cellSize);
+        // var verticalCount = (int) math.ceil(spawner.simulationBounds.heightRadius / grid.cellSize);
+        var keys = grid.GetSurroundingCells(key, spawner.particleProperties.maxRadius);
 
         for (var i = 0; i < keys.Length; i++) {
             DebugDrawCells(keys[i], grid);
@@ -68,7 +68,8 @@ public partial class SpatialPartioningDebug: MonoBehaviour
 
         DrawCircle(mousePos, spawner.particleProperties.maxRadius, 100, Color.red);
 
-        // console.log(console.arrayToString(keys));
+        // console.log("key", key);
+        // console.log(key, "|", console.arrayToString(keys));
 
         keys.Dispose();
     }

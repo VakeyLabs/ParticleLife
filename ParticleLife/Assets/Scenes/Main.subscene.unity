@@ -156,20 +156,21 @@ MonoBehaviour:
   redParticlePrefab: {fileID: 5094317409439789216, guid: 40b5d669ab6f6904b86018914a623c4e, type: 3}
   greenParticlePrefab: {fileID: 5094317409439789216, guid: cf30cf5e851c5df44a3545313b5f56c7, type: 3}
   simulationBounds:
-    height: 80
-    width: 200
+    radiusAttraction: 0.005
+    height: 100
+    width: 2000
     heightRadius: 0
     widthRadius: 0
   particleProperties:
-    count: 10000
-    innerDetract: 20
+    count: 20000
+    innerDetract: 30
     minRadius: 1.5
     maxRadius: 20
   particleMatrix:
     redToRed: -0.5
     redToGreen: 4
     greenToRed: -2
-    greenToGreen: -0.1
+    greenToGreen: 0.1
 --- !u!4 &1465725836
 Transform:
   m_ObjectHideFlags: 0
@@ -197,5 +198,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cc0f1e89efa1ad46b9452b108dcfd2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellSize: 20
+  cellSize: 10
   unitYMultiplier: 1000

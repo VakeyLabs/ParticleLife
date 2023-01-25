@@ -6,6 +6,7 @@ using Unity.Mathematics;
 [Serializable]
 public struct SimulationBounds
 {
+    public float radiusAttraction;
     public float height, width;
     [HideInInspector]
     public float heightRadius, widthRadius;
@@ -17,6 +18,7 @@ public struct ParticleProperties
     public int count;
     public float innerDetract;
     public float minRadius, maxRadius;
+    public float lerpTime;
 }
 
 [Serializable]
@@ -38,10 +40,10 @@ public struct ParticleSpawner: IComponentData
     public float3 GetDelta(float3 aPos, float3 bPos)
     {
         var delta = aPos - bPos;
-        var edgeDeltaX = delta.x > 0 ? delta.x - simulationBounds.width : delta.x + simulationBounds.width;
-        var edgeDeltaY = delta.y > 0 ? delta.y - simulationBounds.height : delta.y + simulationBounds.height;
-        delta.x = math.abs(edgeDeltaX) < math.abs(delta.x) ? edgeDeltaX : delta.x;
-        delta.y = math.abs(edgeDeltaY) < math.abs(delta.y) ? edgeDeltaY : delta.y;
+        // var edgeDeltaX = delta.x > 0 ? delta.x - simulationBounds.width : delta.x + simulationBounds.width;
+        // var edgeDeltaY = delta.y > 0 ? delta.y - simulationBounds.height : delta.y + simulationBounds.height;
+        // delta.x = math.abs(edgeDeltaX) < math.abs(delta.x) ? edgeDeltaX : delta.x;
+        // delta.y = math.abs(edgeDeltaY) < math.abs(delta.y) ? edgeDeltaY : delta.y;
 
         return delta;
     }
