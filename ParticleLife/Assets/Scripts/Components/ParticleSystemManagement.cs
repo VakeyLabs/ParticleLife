@@ -9,6 +9,8 @@ public enum ParticleSystemType
     MainThreadSpatialPartitioning,
     JobNaive,
     JobSpatialPartitioning,
+    Boid,
+    Boid2,
 }
 
 public class ParticleSystemManagement: MonoBehaviour
@@ -40,6 +42,15 @@ public class ParticleSystemManagement: MonoBehaviour
             // return (bool enabled) => world.GetExistingSystemManaged<SpatialPartitioningJobSystem>().Enabled = enabled;
             return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<SpatialPartitioningJobSystem>().Enabled = enabled;
         }
+        else if (systemType == ParticleSystemType.Boid)
+        {
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<BoidJobSystem>().Enabled = enabled;
+        }
+        else if (systemType == ParticleSystemType.Boid2)
+        {
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<BoidJobSystem2>().Enabled = enabled;
+        }
+
 
         return (bool enabled) => { };
     }

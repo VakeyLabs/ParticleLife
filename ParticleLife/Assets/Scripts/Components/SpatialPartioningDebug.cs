@@ -60,7 +60,7 @@ public partial class SpatialPartioningDebug: MonoBehaviour
 
         // var horizontalCount = (int) math.ceil(spawner.simulationBounds.widthRadius / grid.cellSize);
         // var verticalCount = (int) math.ceil(spawner.simulationBounds.heightRadius / grid.cellSize);
-        var keys = grid.GetSurroundingCells(key, spawner.particleProperties.maxRadius);
+        var keys = grid.GetSurroundingCells(key, mousePos, spawner.particleProperties.maxRadius);
 
         for (var i = 0; i < keys.Length; i++) {
             DebugDrawCells(keys[i], grid);

@@ -4,6 +4,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+[UpdateInGroup(typeof(SimulationSystemGroup))]
+[UpdateBefore(typeof(TransformSystemGroup))]
 [BurstCompile]
 public partial struct SpatialPartitioningMainThreadSystem: ISystem
 {
@@ -13,15 +15,12 @@ public partial struct SpatialPartitioningMainThreadSystem: ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
-        var commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
         var grid = SystemAPI.GetSingleton<Grid>();
         var spawner = SystemAPI.GetSingleton<ParticleSpawner>();
         var particleRuleBuffer = SystemAPI.GetSingletonBuffer<ParticleRuleElement>(true);
         var particlesQuery = SystemAPI.QueryBuilder().WithAll<ParticleTag, Velocity, WorldTransform>().Build();
 
         var particleTags = particlesQuery.ToComponentDataArray<ParticleTag>(Allocator.TempJob);
-        var entities = particlesQuery.ToEntityArray(Allocator.TempJob);
         var transforms = particlesQuery.ToComponentDataArray<WorldTransform>(Allocator.TempJob);
 
         var gridHashMap = new NativeMultiHashMap<int, ParticleGridCell>(particlesQuery.CalculateEntityCount(), Allocator.TempJob);
@@ -36,15 +35,12 @@ public partial struct SpatialPartitioningMainThreadSystem: ISystem
             spawner = spawner,
             particleRuleBuffer = particleRuleBuffer,
             particleTags = particleTags,
-            entities = entities,
             transforms = transforms,
             gridHashMap = gridHashMap,
-            commandBuffer = commandBuffer.AsParallelWriter(),
         }.Run();
 
         gridHashMap.Dispose();
         particleTags.Dispose();
-        entities.Dispose();
         transforms.Dispose();
     }
 }

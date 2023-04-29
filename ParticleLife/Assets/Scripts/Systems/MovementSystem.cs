@@ -3,6 +3,10 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+[UpdateInGroup(typeof(SimulationSystemGroup))]
+[UpdateBefore(typeof(TransformSystemGroup))]
+[UpdateBefore(typeof(BoidJobSystem))]
+[UpdateBefore(typeof(BoidJobSystem2))]
 [BurstCompile]
 public partial struct MovementSystem: ISystem
 {
@@ -28,15 +32,14 @@ public partial struct MovementJob: IJobEntity
     public SimulationBounds bounds;
     
     [BurstCompile]  
-    public void Execute(TransformAspect transform, RefRO<Velocity> velocity)
+    public void Execute(TransformAspect transform, RefRO<Velocity> velocityRO)
     {
-        var distance = math.distance(transform.LocalPosition, float3.zero);
-        // if (distance >= bounds.heightRadius) { transform.LocalPosition = float3.zero; }
-        // else 
-
-        var velocityNew = math.lerp(velocity.ValueRO.value, -distance * transform.LocalPosition * bounds.radiusAttraction, lerpTime);
+        var velocity = velocityRO.ValueRO.value;
         
-        transform.TranslateWorld(deltaTime * velocityNew);
+        var distance = math.distance(transform.LocalPosition, float3.zero);
+        velocity = math.lerp(velocity, -distance * transform.LocalPosition * bounds.radiusAttraction, lerpTime);
+
+        transform.TranslateWorld(deltaTime * velocity);
 
         // if (transform.LocalPosition.x <= -bounds.widthRadius) { transform.TranslateWorld(new float3(bounds.width, 0, 0)); } 
         // else if (transform.LocalPosition.x >= bounds.widthRadius) { transform.TranslateWorld(new float3(-bounds.width, 0, 0)); }
