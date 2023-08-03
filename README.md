@@ -13,6 +13,6 @@ For example, the simulation below has the following rules:
 
 ## Optimizations
 
-Since all particles can affect each other, all particles will need to be processed to each other to determine the velocity of each particle. That's a time complexity of O(n^2). The following optimizations have been applied that allow the simulation to run up to 20,000 particles at 60 FPS.
+Since all particles can affect each other, all particles will need to be processed to each other to determine the velocity of each particle. In Big-O terms, that is a whopping O(n²). The following optimizations have been applied that allow the simulation to run up to 20,000 particles at 60 FPS.
 - Use of Spatial Partitioning Technique to dramatically reduce the number of operations needed to determine the velocity of each particle.
 - Use of Data Oriented Design principles. Particle data is organized in a contiguous cache-friendly data structure. This organization enables for extremely efficient, deterministic, and scalable use of L1/L2 cache lines, multi-core parallelization, and SIMD.
