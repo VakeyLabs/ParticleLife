@@ -83,7 +83,6 @@ public partial struct GridAllocationJob: IJobEntity
             color = particle.ValueRO.color,
         };
 
-        // var hash = (int)math.hash(new int3(math.floor(position * 1/grid.testRadius)));
         gridHashMap.Add(key, particleCell);
         
         // var keys = grid.GetSurroundingCells(key, maxRadius);

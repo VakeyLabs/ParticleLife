@@ -32,10 +32,8 @@ public partial struct MovementJob: IJobEntity
     [BurstCompile]  
     public void Execute(TransformAspect transform, RefRO<Velocity> velocityRO)
     {
-        var velocity = velocityRO.ValueRO.value;
-        
         var distance = math.distance(transform.LocalPosition, float3.zero);
-        velocity = math.lerp(velocity, -distance * transform.LocalPosition * bounds.radiusAttraction, lerpTime);
+        var velocity = math.lerp(velocityRO.ValueRO.value, -distance * transform.LocalPosition * bounds.radiusAttraction, lerpTime);
 
         transform.TranslateWorld(deltaTime * velocity);
 

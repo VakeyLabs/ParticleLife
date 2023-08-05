@@ -3,16 +3,8 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
-public enum IterationType {
-    Iteration1,
-    Iteration2,
-    Iteration3,
-}
-
 public struct Grid: IComponentData
 {
-    public IterationType iteration;
-    public float testRadius;
     public int cellSize, unitYMultiplier;
 
     public float3 GetCellPosition(int key)
@@ -87,8 +79,6 @@ public struct Grid: IComponentData
 
 public class GridAuthoring: MonoBehaviour
 { 
-    public IterationType iteration;
-    public float testRadius = 150;
     public int cellSize = 25;
     public int unitYMultiplier = 1000;
 }
@@ -98,8 +88,6 @@ public class GridBaker: Baker<GridAuthoring>
     public override void Bake(GridAuthoring authoring)
     {
         AddComponent(new Grid {
-            iteration = authoring.iteration,
-            testRadius = authoring.testRadius,
             cellSize = authoring.cellSize,
             unitYMultiplier = authoring.unitYMultiplier,
         });
