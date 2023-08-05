@@ -162,7 +162,6 @@ MonoBehaviour:
     heightRadius: 0
     widthRadius: 0
   particleProperties:
-    count: 20000
     innerDetract: 25
     minRadius: 1.5
     maxRadius: 51
@@ -173,16 +172,10 @@ MonoBehaviour:
     greenToRed: -1
     greenToGreen: 0.05
   spawnProperties:
-    fromPos:
-      x: -20
-      y: -20
-      z: 0
-    toPos:
-      x: 20
-      y: 20
-      z: 0
-    fromRot: 3
-    toRot: 3
+    total: 20000
+    spawnRadius: 10
+    sizeFrom: 3
+    sizeTo: 3
 --- !u!4 &1465725836
 Transform:
   m_ObjectHideFlags: 0

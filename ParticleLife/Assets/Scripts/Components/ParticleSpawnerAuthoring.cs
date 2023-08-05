@@ -6,8 +6,9 @@ using Unity.Mathematics;
 [Serializable]
 public struct SpawnProperties
 {
-    public float3 fromPos, toPos;
-    public float fromRot, toRot;
+    public int total;
+    public int spawnRadius;
+    public int sizeFrom, sizeTo;
 }
 
 [Serializable]
@@ -22,7 +23,6 @@ public struct SimulationBounds
 [Serializable]
 public struct ParticleProperties
 {
-    public int count;
     public float innerDetract;
     public float minRadius, maxRadius;
     public float lerpTime;
