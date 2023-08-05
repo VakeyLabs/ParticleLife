@@ -1,13 +1,12 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
 
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 [UpdateBefore(typeof(TransformSystemGroup))]
 [BurstCompile]
-public partial struct SpatialPartitioningMainThreadSystem: ISystem
+public partial struct MainThreadSpatialPartitioningParticleSystem: ISystem
 {
     public void OnCreate(ref SystemState state) { }
     public void OnDestroy(ref SystemState state) { }
@@ -22,6 +21,7 @@ public partial struct SpatialPartitioningMainThreadSystem: ISystem
 
         var particleTags = particlesQuery.ToComponentDataArray<ParticleTag>(Allocator.TempJob);
         var transforms = particlesQuery.ToComponentDataArray<WorldTransform>(Allocator.TempJob);
+        var entities = particlesQuery.ToEntityArray(Allocator.TempJob);
 
         var gridHashMap = new NativeMultiHashMap<int, ParticleGridCell>(particlesQuery.CalculateEntityCount(), Allocator.TempJob);
 
@@ -30,11 +30,12 @@ public partial struct SpatialPartitioningMainThreadSystem: ISystem
             gridHashMap = gridHashMap.AsParallelWriter()
         }.ScheduleParallel(state.Dependency).Complete();
 
-        new SpatialPartitioningJob{
+        new SpatialPartitioningParticleJob{
             grid = grid,
             spawner = spawner,
             particleRuleBuffer = particleRuleBuffer,
             particleTags = particleTags,
+            entities = entities,
             transforms = transforms,
             gridHashMap = gridHashMap,
         }.Run();

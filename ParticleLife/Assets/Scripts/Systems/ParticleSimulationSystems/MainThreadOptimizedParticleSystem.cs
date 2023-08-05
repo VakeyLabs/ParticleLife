@@ -5,7 +5,7 @@ using Unity.Transforms;
 using Unity.Mathematics;
 
 [BurstCompile]
-public partial struct ParticleSimulationMainThreadOptimizedSystem: ISystem
+public partial struct MainThreadOptimizedParticleSystem: ISystem
 {
     public void OnCreate(ref SystemState state) { }
     public void OnDestroy(ref SystemState state) { }
@@ -58,7 +58,7 @@ public partial struct ParticleSimulationMainThreadOptimizedSystem: ISystem
             }
 
             aVel = math.lerp(aVel, force[i] * 0.4f, 0.5f);
-            commandBuffer.SetComponent<Velocity>(entity, new Velocity { value = aVel });
+            commandBuffer.SetComponent(entity, new Velocity { value = aVel });
         }
 
         particleTags.Dispose();

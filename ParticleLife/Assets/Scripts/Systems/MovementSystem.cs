@@ -5,8 +5,6 @@ using Unity.Transforms;
 
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 [UpdateBefore(typeof(TransformSystemGroup))]
-[UpdateBefore(typeof(BoidJobSystem))]
-[UpdateBefore(typeof(BoidJobSystem2))]
 [BurstCompile]
 public partial struct MovementSystem: ISystem
 {

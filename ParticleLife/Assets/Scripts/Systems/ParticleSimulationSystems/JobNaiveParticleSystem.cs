@@ -5,7 +5,7 @@ using Unity.Transforms;
 using Unity.Mathematics;
 
 [BurstCompile]
-public partial struct ParticleSimulationJobNaiveSystem: ISystem
+public partial struct JobNaiveParticleSystem: ISystem
 {
     public void OnCreate(ref SystemState state) { }
     public void OnDestroy(ref SystemState state) { }
@@ -23,7 +23,7 @@ public partial struct ParticleSimulationJobNaiveSystem: ISystem
         var entities = particlesQuery.ToEntityArray(Allocator.TempJob);
         var transforms = particlesQuery.ToComponentDataArray<WorldTransform>(Allocator.TempJob);
         
-        var jobHandle = new ParticleSimulationNaiveJob{ 
+        var jobHandle = new NaiveParticleSimulationJob{ 
             spawner = spawner,
             particleRuleBuffer = particleRuleBuffer,
             particleTags = particleTags,
@@ -40,9 +40,8 @@ public partial struct ParticleSimulationJobNaiveSystem: ISystem
     }
 }
 
-
 [BurstCompile]
-public partial struct ParticleSimulationNaiveJob: IJobEntity
+public partial struct NaiveParticleSimulationJob: IJobEntity
 {
     [ReadOnly]
     public ParticleSpawner spawner;

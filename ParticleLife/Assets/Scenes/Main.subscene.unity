@@ -156,7 +156,7 @@ MonoBehaviour:
   redParticlePrefab: {fileID: 5094317409439789216, guid: 40b5d669ab6f6904b86018914a623c4e, type: 3}
   greenParticlePrefab: {fileID: 5094317409439789216, guid: cf30cf5e851c5df44a3545313b5f56c7, type: 3}
   simulationBounds:
-    radiusAttraction: 0.00005
+    radiusAttraction: 0.002
     height: 200
     width: 2000
     heightRadius: 0
