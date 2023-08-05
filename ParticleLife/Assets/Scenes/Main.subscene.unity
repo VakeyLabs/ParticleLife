@@ -210,7 +210,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cc0f1e89efa1ad46b9452b108dcfd2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iteration: 2
-  testRadius: 10
-  cellSize: 10
+  cellSize: 20
   unitYMultiplier: 1000
