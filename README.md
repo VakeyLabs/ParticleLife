@@ -15,4 +15,4 @@ For example, the simulation below has the following rules:
 
 Since all particles can affect each other, all particles will need to be processed to each other to determine the velocity of each particle. In Big-O terms, that is a whopping O(n²). The following optimizations have been applied that allow the simulation to run smoothly with up to 20,000 particles.
 - Use of Spatial Partitioning Technique to dramatically reduce the number of operations needed to determine the velocity of each particle.
-- Use of Data Oriented Design principles. Particle data is organized in contiguous cache-friendly data structures to allow for efficient data access and parallelization..
+- Use of Data Oriented Design principles. Particle data is organized in contiguous cache-friendly data structures to allow for efficient data access and parallelization.
