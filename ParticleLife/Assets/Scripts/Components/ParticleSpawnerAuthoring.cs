@@ -4,6 +4,13 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 [Serializable]
+public struct SpawnProperties
+{
+    public float3 fromPos, toPos;
+    public float fromRot, toRot;
+}
+
+[Serializable]
 public struct SimulationBounds
 {
     public float radiusAttraction;
@@ -33,6 +40,7 @@ public struct ParticleEntityElement: IBufferElementData { public Entity prefab; 
 
 public struct ParticleSpawner: IComponentData
 {
+    public SpawnProperties spawnProperties;
     public SimulationBounds simulationBounds;
     public ParticleProperties particleProperties;
     public int colorCount;
@@ -50,7 +58,7 @@ public struct ParticleSpawner: IComponentData
 
     public float3 GetForce(float attraction, float distance, float3 delta)
     {
-        return attraction * 1/distance * delta;
+        return attraction / distance * delta;
     }
 }
 
@@ -60,6 +68,7 @@ public class ParticleSpawnerAuthoring: MonoBehaviour
     public SimulationBounds simulationBounds;
     public ParticleProperties particleProperties;
     public ParticleMatrix particleMatrix;
+    public SpawnProperties spawnProperties;
 }
 
 public class ParticleSpawnerBaker: Baker<ParticleSpawnerAuthoring>
@@ -81,6 +90,7 @@ public class ParticleSpawnerBaker: Baker<ParticleSpawnerAuthoring>
         entityBuffer.Add(new ParticleEntityElement { prefab = GetEntity(authoring.greenParticlePrefab) });
 
         AddComponent(new ParticleSpawner {
+            spawnProperties = authoring.spawnProperties,
             simulationBounds = bounds,
             particleProperties = authoring.particleProperties,
             colorCount = (int)Math.Sqrt(ruleBuffer.Length),

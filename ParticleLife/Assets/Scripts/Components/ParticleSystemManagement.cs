@@ -21,24 +21,24 @@ public class ParticleSystemManagement: MonoBehaviour
     {
         if (systemType == ParticleSystemType.MainThreadNaive)
         {
-            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<ParticleSimulationMainThreadNaiveSystem>().Enabled = enabled;
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<MainThreadNaiveParticleSystem>().Enabled = enabled;
         }
         else if (systemType == ParticleSystemType.MainThreadOptimized)
         {
-            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<ParticleSimulationMainThreadOptimizedSystem>().Enabled = enabled;
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<MainThreadOptimizedParticleSystem>().Enabled = enabled;
         }
         else if (systemType == ParticleSystemType.JobNaive)
         {
-            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<ParticleSimulationJobNaiveSystem>().Enabled = enabled;
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<JobNaiveParticleSystem>().Enabled = enabled;
         }
         else if (systemType == ParticleSystemType.MainThreadSpatialPartitioning)
         {
-            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<SpatialPartitioningMainThreadSystem>().Enabled = enabled;
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<MainThreadSpatialPartitioningParticleSystem>().Enabled = enabled;
         }
         else if (systemType == ParticleSystemType.JobSpatialPartitioning)
         {
-            // return (bool enabled) => world.GetExistingSystemManaged<SpatialPartitioningJobSystem>().Enabled = enabled;
-            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<SpatialPartitioningJobSystem>().Enabled = enabled;
+            // return (bool enabled) => world.GetExistingSystemManaged<JobSpatialPartitioningParticleSystem>().Enabled = enabled;
+            return (bool enabled) =>  world.Unmanaged.GetExistingSystemState<JobSpatialPartitioningParticleSystem>().Enabled = enabled;
         }
 
         return (bool enabled) => { };

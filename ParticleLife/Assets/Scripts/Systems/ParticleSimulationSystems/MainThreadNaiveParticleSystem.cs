@@ -4,7 +4,7 @@ using Unity.Collections;
 using Unity.Transforms;
 
 [BurstCompile]
-public partial struct ParticleSimulationMainThreadNaiveSystem: ISystem
+public partial struct MainThreadNaiveParticleSystem: ISystem
 {
     public void OnCreate(ref SystemState state) { }
     public void OnDestroy(ref SystemState state) { }
@@ -22,7 +22,7 @@ public partial struct ParticleSimulationMainThreadNaiveSystem: ISystem
         var entities = particlesQuery.ToEntityArray(Allocator.TempJob);
         var transforms = particlesQuery.ToComponentDataArray<WorldTransform>(Allocator.TempJob);
 
-        new ParticleSimulationNaiveJob{ 
+        new NaiveParticleSimulationJob { 
             spawner = spawner,
             particleRuleBuffer = particleRuleBuffer,
             particleTags = particleTags,

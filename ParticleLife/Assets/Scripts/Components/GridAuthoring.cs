@@ -23,6 +23,7 @@ public struct Grid: IComponentData
 
     public int GetHashMapKey(float3 pos)
     {
+        // return(int) math.hash(new int3(math.floor(pos / cellSize)));
         return (int) (math.floor(pos.x / cellSize) + unitYMultiplier * math.floor(pos.y / cellSize));
     }
 
@@ -39,46 +40,40 @@ public struct Grid: IComponentData
         return count;
     }
 
-    public NativeArray<int> GetSurroundingCells(int key, float maxRadius)
-    {
-        var keys = new NativeArray<int>(GetSorroundingCellsCount(maxRadius), Allocator.Temp);
-        GetSurroundingCells(ref keys, key);
-        return keys;
-    }
-
     public int GetSorroundingCellsCount(float maxRadius)
     {
         var cellsLength = (int)math.ceil(maxRadius / cellSize) * 2 + 1;
         return cellsLength * cellsLength;
     }
 
-    public void GetSurroundingCells(ref NativeArray<int> keys, int key)
+    
+    public NativeArray<int> GetSurroundingCells(int key, float3 pos, float maxRadius)
     {
-        var cellPos = GetCellPosition(key);
-        // var leftX = -1;
-        // var rightX = 1;
-        // var topY = unitYMultiplier;
-        // var bottomY = -unitYMultiplier;
+        var cellCenterPos = new float3(math.floor(pos.x / cellSize), math.floor(pos.y / cellSize), 0) * cellSize;
+        var relativePos = pos - cellCenterPos;
+        var xStart = (int)math.floor((relativePos.x - maxRadius) / cellSize);
+        var xEnd = (int)math.floor((relativePos.x + maxRadius) / cellSize) + 1;
+        var yStart = (int)math.floor((relativePos.y - maxRadius) / cellSize);
+        var yEnd = (int)math.floor((relativePos.y + maxRadius) / cellSize) + 1;
+        var cellHeight = yEnd - yStart;
+        var cellWidth = xEnd - xStart;
+        var cellCount = cellHeight * cellWidth;
 
-        // if (cellPos.x == horizontalCount - 1) rightX += -horizontalCount * 2;
-        // else if (cellPos.x == -horizontalCount) leftX += horizontalCount * 2;
+        yStart*=unitYMultiplier;
+        yEnd*=unitYMultiplier;
 
-        // if (cellPos.y == verticalCount - 1) topY += -verticalCount * 2 * unitYMultiplier;
-        // else if (cellPos.y == -verticalCount) bottomY += verticalCount * 2 * unitYMultiplier;
-        
+        var keys = new NativeArray<int>(cellCount, Allocator.Temp);
         var index = 0;
-        var count = ((int)math.sqrt(keys.Length) - 1) / 2;
 
-        var yStart = unitYMultiplier * count;
-        var xStart = -count;
-
-        for (var y = yStart; y >= -yStart; y -= unitYMultiplier)
+        for (var y = yStart; y < yEnd; y+=unitYMultiplier)
         {
-            for (var x = xStart; x <= -xStart; x++)
+            for (var x = xStart; x < xEnd; x++)
             {
                 keys[index++] = key + x + y;
             }
         }
+        
+        return keys;
     }
 }
 
