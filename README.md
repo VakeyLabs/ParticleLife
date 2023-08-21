@@ -1,6 +1,6 @@
 # Particle Life
 
-A particle simulation that creates life-like structures. This is where small simple parts are combined to create a larger more complex structure using simple rules of where particles are either attracted or repelled from each other.
+ A particle simulation that creates life-like structures based on [Jeffrey Ventrella's](https://en.wikipedia.org/wiki/Jeffrey_Ventrella) idea of "Clusters". This is where small simple parts are combined to create a larger more complex structure using simple rules of where particles are either attracted or repelled from each other.
 
 For example, the simulation below has the following rules:
 - Red Particles are attracted to Red Particles by 1x
